@@ -6,29 +6,40 @@ def task5_1(input_string):
     :param : input_string - вводимое выражение
     :return: None
     '''
-    import re
 
-    pattern = r'(?=.*3)(?=.*5)(?=.*8)(?=.*\+)(?=.*=)'
+    chars = "3+5=8"
+    flag = True
 
-    if re.search(pattern, input_string):
+    for char in chars:
+        if chars.count(char) > input_string.count(char):
+            flag = False
+            break
+
+    if flag:
         print("Можно составить выражение '3+5=8'")
     else:
         print("Нельзя составить выражение '3+5=8'")
 
 
-def task5_2(word):
+def task5_2(text):
     '''
     Задание: Составить программу циклической перестановки букв в словах текста так, что i-я буква слова становится i+1-ой, а последняя - первой
 
-    :param : word - вводимое слово
+    :param : text - вводимое слово
     :return: result - результат работы программы
     '''
 
-    import re
+    words = text.split()
 
-    sample = r'\b\w+\b'
+    new_words = []
+    for word in words:
+        if len(word) > 1:
+            new_word = words[-1] + word[:-1]
+        else:
+            new_word = word
+        new_words.append(new_word)
 
-    result = re.sub(sample, lambda match: match.group(0)[-1] + match.group(0)[:-1], word)
+    result = ' '.join(new_words)
 
     return result
 
@@ -39,11 +50,16 @@ def task5_3(sentence):
     :param: sentence
     :return: sentence - возвращаемая строка с одним символом
     '''
-    import re
 
-    while len(sentence) > 1:
+
+    if len(sentence) > 0:
+        while len(sentence) > 1:
+            print(sentence)
+            sentence = sentence[:-1]
+
         print(sentence)
-        sentence = re.sub(r'.$', '', sentence)
+    else:
+        print("Строка не должна быть пустой.")
 
     return sentence
 
@@ -55,24 +71,41 @@ def task5_4(text):
     :param: text - Вводимый текст
     :return: None
     '''
-    import re
 
-    sentences = re.split(r'(?<=[.!?]) +', text)
-    first_sentence_words = set(re.findall(r'\b\w+\b', sentences[0].lower()))
-    other_sentences_words = set()
+    text = text.lower()
 
-    for i in range(1, len(sentences)):
-        other_sentences_words.update(re.findall(r'\b\w+\b', sentences[i].lower()))
+    sentences = text.split('.')
 
-    unique_word = first_sentence_words - other_sentences_words
+    sentences_cleaned = []
+    for s in sentences:
+        stripped_sentence = s.strip()
+        if stripped_sentence:
+            sentences_cleaned.append(stripped_sentence)
 
-    if unique_word:
-        print("Уникальное слово из первого предложения:", unique_word.pop())
+    if len(sentences_cleaned) < 2:
+        print("Недостаточно предложений для анализа.")
     else:
-        print("Нет уникальных слов в первом предложении.")
+        first_sentence = sentences_cleaned[0]
+        other_sentences = sentences_cleaned[1:]
+
+        first_words = set(first_sentence.split())
+
+        other_words = set()
+        for sentence in other_sentences:
+            words = sentence.split()
+            for word in words:
+                other_words.add(word)
+
+        unique_words = first_words.difference(other_words)
+
+        if unique_words:
+            print(unique_words)
+        else:
+            print("Нет уникальных слов в первом предложении.")
 
 
-def task5_5():
+
+def task5_5(color_id):
     '''
     Написать регулярное выражение, определяющее является ли данная строчка
     шестнадцатеричным идентификатором цвета в HTML. Где #FFFFFF для
@@ -80,30 +113,21 @@ def task5_5():
     – пример правильных выражений: #FFFFFF, #FF3421, #00ff00.
     – пример неправильных выражений: 232323, f#fddee, #fd2.
 
-    :param: None
+    :param: color_id - вводимый идентификатор цвета
     :return: None
     '''
+
     import re
 
-    pattern = r'^#[0-9A-Fa-f]{6}$'
+    pattern = r'^#[0-9A-Fa-f]{6}$|^#[0-9A-Fa-f]{3}$'
 
-    test_strings = [
-        "#FFFFFF",  # правильный
-        "#FF3421",  # правильный
-        "#00ff00",  # правильный
-        "232323",  # неправильный
-        "f#fddee",  # неправильный
-        "#fd2",  # неправильный
-    ]
-
-    for string in test_strings:
-        if re.match(pattern, string):
-            print(f"{string} - правильный идентификатор цвета")
-        else:
-            print(f"{string} - неправильный идентификатор цвета")
+    if re.match(pattern, color_id):
+        print("Это правильный идентификатор цвета.")
+    else:
+        print("Это неправильный идентификатор цвета.")
 
 
-def task5_6():
+def task5_6(input_string):
     '''
     Задание: Строки, содержащие две буквы «z», между которыми ровно три символа.
     Пример строк, которые подходят: «zabcz», «zzz», «zzxzz». Пример строк,
@@ -112,22 +136,16 @@ def task5_6():
     :param: None
     :return: None
     '''
-    import re
 
-    strings = [
-        "zabcz",
-        "zzz",
-        "zzxzz",
-        "zz",
-        "zxz",
-        "zzxzxxz"
-    ]
+    import re
 
     pattern = r'z.{3}z'
 
-    for s in strings:
-        if re.fullmatch(pattern, s):
-            print(s)
+    if re.search(pattern, input_string):
+        print("Строка подходит.")
+    else:
+        print("Строка не подходит.")
+
 
 def task5_7(text):
     '''
